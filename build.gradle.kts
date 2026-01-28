@@ -11,11 +11,21 @@ plugins {
 
 group = "com.sdevprem"
 version = "0.0.1"
+
+kotlin {
+    jvmToolchain(11)
+}
+
 application {
     mainClass.set("io.ktor.server.netty.EngineMain")
 
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 repositories {
