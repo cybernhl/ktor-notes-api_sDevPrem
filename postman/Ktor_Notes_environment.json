@@ -1,0 +1,21 @@
+{
+  "id": "a8f9c1d0-1b2c-4d5e-8f6a-7b8c9d0e1f2a",
+  "name": "sDevPrem`s Ktor Notes - Dev",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://0.0.0.0:8080",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2024-05-23T10:00:00.000Z",
+  "_postman_exported_using": "Postman/10.24.18"
+}
