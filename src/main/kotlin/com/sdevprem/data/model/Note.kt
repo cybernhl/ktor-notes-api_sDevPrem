@@ -6,6 +6,7 @@ import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.fasterxml.jackson.annotation.JsonIgnore
+import kotlinx.serialization.Serializable
 
 @Entity(
     tableName = "notes",
@@ -19,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
     ],
     indices = [Index(value = ["userId"])]
 )
+@Serializable
 data class Note(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,

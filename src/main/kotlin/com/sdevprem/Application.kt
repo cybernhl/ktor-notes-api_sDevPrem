@@ -1,6 +1,5 @@
 package com.sdevprem
 
-import com.sdevprem.data.db.DBHelper.configureDbVariable
 import com.sdevprem.plugins.*
 import com.sdevprem.route.configureNotesRoute
 import com.sdevprem.route.registerAuthRoute
@@ -14,7 +13,6 @@ fun Application.module() {
     configureSerialization()
     configureMonitoring()
     configureSecurity()
-    configureDbVariable()
     configureKoin()
     configureRouting()
     configureNotesRoute()

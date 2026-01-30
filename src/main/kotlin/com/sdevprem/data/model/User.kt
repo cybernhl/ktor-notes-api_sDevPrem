@@ -3,8 +3,10 @@ package com.sdevprem.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.fasterxml.jackson.annotation.JsonProperty
+import kotlinx.serialization.Serializable
 
 @Entity(tableName = "users")
+@Serializable
 data class User(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
