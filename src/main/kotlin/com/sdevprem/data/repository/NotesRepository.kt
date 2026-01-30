@@ -2,54 +2,51 @@ package com.sdevprem.data.repository
 
 import com.sdevprem.data.db.schema.NoteSchema
 import com.sdevprem.data.model.Note
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 
-class NotesRepository(
-    private val db: Database
-) {
+class NotesRepository(private val db: Database) : INotesRepository {
 
-    fun getNotes(uid: Int) = db
-        .from(NoteSchema)
-        .select()
-        .where {
-            NoteSchema.uid eq uid
-        }
-        .map { NoteSchema.createEntity(it) }
+    private val ioDispatcher = Dispatchers.IO
 
-    fun getNotesById(uid: Int, id: Int) = db
-        .from(NoteSchema)
-        .select()
-        .where {
-            (NoteSchema.uid eq uid) and
-                    (NoteSchema.id eq id)
-        }
-        .map { NoteSchema.createEntity(it) }
-        .firstOrNull()
+    override suspend fun getNotes(uid: Int): List<Note> = withContext(ioDispatcher) {
+        db.from(NoteSchema)
+            .select()
+            .where { NoteSchema.uid eq uid }
+            .map { NoteSchema.createEntity(it) }
+    }
 
-    fun insertNote(uid: Int, note: Note) =
-        db
-            .insertAndGenerateKey(NoteSchema) {
-                set(NoteSchema.uid, uid)
-                set(NoteSchema.description, note.description)
-                set(NoteSchema.title, note.title)
-            } as Int
+    override suspend fun getNoteById(uid: Int, id: Int): Note? = withContext(ioDispatcher) {
+        db.from(NoteSchema)
+            .select()
+            .where { (NoteSchema.uid eq uid) and (NoteSchema.id eq id) }
+            .map { NoteSchema.createEntity(it) }
+            .firstOrNull()
+    }
 
-    fun updateNote(uid: Int, id: Int, note: Note) =
-        db
-            .update(NoteSchema) {
-                set(NoteSchema.description, note.description)
-                set(NoteSchema.title, note.title)
-                where {
-                    (NoteSchema.uid eq uid) and
-                            (NoteSchema.id eq id)
-                }
+    override suspend fun insertNote(uid: Int, note: Note): Int = withContext(ioDispatcher) {
+        db.insertAndGenerateKey(NoteSchema) {
+            set(it.uid, uid)
+            set(it.description, note.description)
+            set(it.title, note.title)
+        } as Int
+    }
+
+    override suspend fun updateNote(uid: Int, id: Int, note: Note): Int = withContext(ioDispatcher) {
+        db.update(NoteSchema) {
+            set(it.description, note.description)
+            set(it.title, note.title)
+            where {
+                (it.uid eq uid) and (it.id eq id)
             }
-
-    fun deleteNote(uid: Int, id: Int) =
-        db.delete(NoteSchema)
-        {
-            (NoteSchema.uid eq uid) and
-                    (NoteSchema.id eq id)
         }
+    }
+
+    override suspend fun deleteNote(uid: Int, id: Int): Int = withContext(ioDispatcher) {
+        db.delete(NoteSchema) {
+            (it.uid eq uid) and (it.id eq id)
+        }
+    }
 }

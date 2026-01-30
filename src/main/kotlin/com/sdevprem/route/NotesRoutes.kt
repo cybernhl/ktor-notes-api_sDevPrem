@@ -39,9 +39,8 @@ private fun Route.notesRoutes() {
     post {
         val note = call.receive<Note>()
         val newId = notesService.createNote(call.getUid(), note)
-        call.respond(HttpStatusCode.Created, note.apply {
-            this["id"] = newId
-        })
+        val responseNote = note.copy(id = newId)
+        call.respond(HttpStatusCode.Created, responseNote)
     }
     delete("/{id}") {
         val id = call.parameters["id"]?.toInt()
@@ -61,10 +60,7 @@ private fun Route.notesRoutes() {
         if (rowsAffected < 1)
             call.respond(HttpStatusCode.NotFound, "Cannot find notes for the given ID")
         else
-            call.respond(HttpStatusCode.OK, note.also {
-                it["id"] = id
-            })
-
+            call.respond(HttpStatusCode.OK, note.copy(id = id))
     }
 }
 

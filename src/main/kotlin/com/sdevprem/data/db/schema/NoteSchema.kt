@@ -1,14 +1,25 @@
 package com.sdevprem.data.db.schema
 
 import com.sdevprem.data.model.Note
-import org.ktorm.schema.Table
 import org.ktorm.schema.int
 import org.ktorm.schema.text
 import org.ktorm.schema.varchar
+import org.ktorm.dsl.QueryRowSet
+import org.ktorm.schema.BaseTable
+object NoteSchema : BaseTable<Note>("t_note") {
+    val id = int("id").primaryKey()
+    val title = varchar("title")
+    val description = text("description")
+    val uid = int("uid")
 
-object NoteSchema : Table<Note>("t_note") {
-    val id = int("id").primaryKey().bindTo { it.id }
-    val title = varchar("title").bindTo { it.title }
-    val description = text("description").bindTo { it.description }
-    val uid = int("uid").references(UserSchema) { it.user }
+    override fun aliased(alias: String) = this
+
+    override fun doCreateEntity(row: QueryRowSet, withReferences: Boolean): Note {
+        return Note(
+            id = row[id]!!,
+            title = row[title]!!,
+            description = row[description]!!,
+            userId = row[uid]!!
+        )
+    }
 }

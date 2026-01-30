@@ -1,23 +1,24 @@
 package com.sdevprem.data.service
 
 import com.sdevprem.data.model.Note
-import com.sdevprem.data.repository.NotesRepository
+import com.sdevprem.data.repository.INotesRepository // <-- 依賴介面
 
 class NotesService(
-    private val notesRepository: NotesRepository
+    private val notesRepository: INotesRepository // <-- 使用介面類型
 ) {
-    fun getNotes(uid: Int) =
+    // 全部加上 suspend
+    suspend fun getNotes(uid: Int) =
         notesRepository.getNotes(uid)
 
-    fun deleteNote(uid: Int, noteId: Int) =
+    suspend fun deleteNote(uid: Int, noteId: Int) =
         notesRepository.deleteNote(uid, noteId)
 
-    fun updateNote(uid: Int, noteId: Int, note: Note) =
+    suspend fun updateNote(uid: Int, noteId: Int, note: Note) =
         notesRepository.updateNote(uid, noteId, note)
 
-    fun createNote(uid: Int, note: Note) =
+    suspend fun createNote(uid: Int, note: Note) =
         notesRepository.insertNote(uid, note)
 
-    fun getNoteById(uid: Int, noteId: Int) =
-        notesRepository.getNotesById(uid, noteId)
+    suspend fun getNoteById(uid: Int, noteId: Int) =
+        notesRepository.getNoteById(uid, noteId)
 }
